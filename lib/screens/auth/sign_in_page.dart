@@ -121,7 +121,9 @@ class SignInPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(
                             Dimensions.radius30,
                           ),
-                          color: AppColor.mainColor,
+                          color: Theme.of(context)
+                              .textSelectionTheme
+                              .cursorColor!,
                         ),
                         child: Center(
                           child: BigText(

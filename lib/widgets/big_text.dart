@@ -22,7 +22,7 @@ class BigText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      maxLines: 1,
+      maxLines: 2,
       overflow: textOverflow,
       style: TextStyle(
         fontFamily: 'Roboto',

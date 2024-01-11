@@ -1,3 +1,4 @@
+import 'package:flutterexpatriocodingchallenge/shared/countries_constants.dart';
 import 'package:get/get.dart';
 
 import '../data/repository/user_tax_repo.dart';
@@ -12,13 +13,20 @@ class UserTaxController extends GetxController {
   });
 
   //Counter value to add a TID number matching the value of the counter
-  int _counter = 3;
+  int _counter = 1;
 
   int get counter => _counter;
+  Map<String, dynamic> _num = Map<String, dynamic>();
+
+  Map<String, dynamic> get num => _num;
 
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;
+
+  bool _isChecked = false;
+
+  bool get isChecked => _isChecked;
 
   Future<ResponseModel> setUserTaxes(UserTaxModel userTaxModel) async {
     _isLoading = true;
@@ -37,10 +45,23 @@ class UserTaxController extends GetxController {
     return responseModel;
   }
 
+  set setNumValue(Map<String, dynamic> numMap) {
+    _num = numMap;
+  }
 
   //Edit the value of the counter each time the user want to add a new TID number.
-  void increaseCounterValue(){
+  void increaseCounterValue() {
     _counter++;
+    update();
+  }
+
+  void decreaseCounterValue() {
+    _counter--;
+    update();
+  }
+
+  void changeStatus(bool value){
+    _isChecked=value;
     update();
   }
 }

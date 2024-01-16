@@ -16,24 +16,29 @@ class UserTaxPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool checkNotUSCitizen = false;
-    TextEditingController tidNumberController = TextEditingController();
 
+    //The controller of the TID number Text field
+    List<TextEditingController> tidNumberController = <TextEditingController>[];
+
+    //Save the selected value from the country dropdown
     late Map<String, dynamic> countryCodeName;
-    List<Map<String, dynamic>> countryCodeList = [];
+
+    List<PrimaryTaxResidence>? countryCodeList = [
+      PrimaryTaxResidence(country: "", id: ""),
+      PrimaryTaxResidence(country: "", id: ""),
+    ];
+
     List<Map<String, dynamic>> tidNationality = CountriesConstants.nationality;
 
+    //Send the request to the backend
     void setUserTaxesForBackend(UserTaxController userTaxController) {
       PrimaryTaxResidence primaryTaxResidence = PrimaryTaxResidence(
         country: countryCodeName["code"],
-        id:tidNumberController.text,
+        id: tidNumberController.first.text,
       );
       UserTaxModel userTaxModel = UserTaxModel(
           primaryTaxResidence: primaryTaxResidence,
-          secondaryTaxResidence: [
-            PrimaryTaxResidence(country: "GH", id: "2981"),
-            PrimaryTaxResidence(country: "GR", id: "2763"),
-          ]);
+          secondaryTaxResidence: countryCodeList.sublist(1));
       userTaxController
           .setUserTaxes(
         userTaxModel,
@@ -108,6 +113,7 @@ class UserTaxPage extends StatelessWidget {
                               Expanded(
                                 child: ListView.builder(
                                   itemBuilder: (context, index) {
+                                    tidNumberController.add(TextEditingController());
                                     return Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -136,9 +142,13 @@ class UserTaxPage extends StatelessWidget {
                                               (element) =>
                                                   element["label"] == value,
                                             );
-                                            countryCodeList.add({
-                                              "code": countryCodeName["code"]
+
+                                            countryCodeList[index].country =
+                                                countryCodeName["code"];
+                                            countryCodeList.forEach((element) {
+                                              print(element.country);
                                             });
+                                            // print(countryCodeList[index].country);
                                           },
                                           dropdownDecoratorProps:
                                               DropDownDecoratorProps(
@@ -173,10 +183,6 @@ class UserTaxPage extends StatelessWidget {
                                           height: Dimensions.height10,
                                         ),
                                         TextField(
-                                          onSubmitted: (changedValue) {
-                                            countryCodeList
-                                                .add({"TID": changedValue});
-                                          },
                                           decoration: InputDecoration(
                                             hintText: "Tax ID or N/A",
                                             focusedBorder: OutlineInputBorder(
@@ -208,7 +214,14 @@ class UserTaxPage extends StatelessWidget {
                                               fontSize: Dimensions.font20,
                                             ),
                                           ),
-                                          controller: tidNumberController,
+                                          onSubmitted: (value) {
+                                            countryCodeList[index].id =
+                                                tidNumberController[index].text;
+                                            countryCodeList.forEach((element) {
+                                              print(element.id);
+                                            });
+                                          },
+                                          controller: tidNumberController[index],
                                         ),
                                       ],
                                     );
@@ -237,6 +250,8 @@ class UserTaxPage extends StatelessWidget {
                                       ? Container()
                                       : GestureDetector(
                                           onTap: () {
+                                            tidNumberController.removeAt( userTaxController.counter-1);
+                                            countryCodeList.removeAt(userTaxController.counter-1);
                                             userTaxController
                                                 .decreaseCounterValue();
                                           },
@@ -282,6 +297,10 @@ class UserTaxPage extends StatelessWidget {
                                 child: GestureDetector(
                                   onTap: () {
                                     if (userTaxController.isChecked) {
+                                      countryCodeList.forEach((element) {
+                                        print(element.country);
+                                        print(element.id);
+                                      });
                                       setUserTaxesForBackend(userTaxController);
                                       Navigator.pop(context);
                                     } else if (countryCodeList.isEmpty) {

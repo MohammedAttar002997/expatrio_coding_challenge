@@ -1,0 +1,16 @@
+Errors:
+1- Sending the User tax data request giving an unknown error.
+
+How to fix:
+1- Start the debugging mode and follow
+the break points to reach where the error is happening.
+2- Report back.
+
+Things to be done:
+1- Adding the (get user tax data request) and fill the info
+ in the UI (dropdown and TextField)that has you have.
+
+How to be done:
+1- Add a request in the userTaxController.
+2- Add the required function in the userTaxRepo.
+3- Follow the same pattern as in other requests to finish this task.
